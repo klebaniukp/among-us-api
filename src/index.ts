@@ -6,18 +6,26 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { GameState, Player, Task } from './types';
 
-
 dotenv.config();
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-
 const httpServer = createServer(app);
+
+// Zaktualizowana konfiguracja CORS
+const allowedOrigins = [
+  'https://among-us-front.vercel.app',
+  'http://localhost:3000' // dla rozwoju lokalnego
+];
+
+app.use(cors({
+  origin: allowedOrigins
+}));
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: ['GET', 'POST']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
